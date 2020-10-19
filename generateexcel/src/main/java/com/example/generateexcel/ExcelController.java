@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+import java.io.ByteArrayOutputStream;
+
 @RestController
 @RequestMapping("/api/excels")
 public class ExcelController {
@@ -19,12 +21,21 @@ public class ExcelController {
 
     //simplest example
     @GetMapping("/hello-world")
-    public ResponseEntity<StreamingResponseBody> excel() {
-
+    public ResponseEntity<StreamingResponseBody> helloWorldExcel() {
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=\"myfilename.xlsx\"")
+                //attachment
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=myfilename.xlsx")
                 .body(excelService.generateHelloWorldExcel()::write);
     }
+
+//    @GetMapping("/hello-world-byte-array")
+//    public ResponseEntity<ByteArrayOutputStream> helloWorldExcelButWithByteArray() {
+//        return ResponseEntity
+//                .ok()
+//                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+//                .header(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=myfilename.xlsx")
+//                .body(excelService.generateHelloWorldExcel()::write);
+//    }
 }
