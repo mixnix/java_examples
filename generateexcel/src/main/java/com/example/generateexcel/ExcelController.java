@@ -30,6 +30,17 @@ public class ExcelController {
                 .body(excelService.generateHelloWorldExcel()::write);
     }
 
+    //creates sorted excel
+    @GetMapping("/sorted-excel")
+    public ResponseEntity<StreamingResponseBody> sortedExcel() {
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                //attachment
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=myfilename.xlsx")
+                .body(excelService.generateFilteredExcel()::write);
+    }
+
 //    @GetMapping("/hello-world-byte-array")
 //    public ResponseEntity<ByteArrayOutputStream> helloWorldExcelButWithByteArray() {
 //        return ResponseEntity
