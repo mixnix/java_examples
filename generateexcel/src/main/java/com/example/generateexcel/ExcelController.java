@@ -1,9 +1,6 @@
 package com.example.generateexcel;
 
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,24 +13,18 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 @RequestMapping("/api/excels")
 public class ExcelController {
 
+    //I should inject through constructor, not through autowiring. But I didn't want to add Lombok dependency
+    @Autowired
+    ExcelService excelService;
+
     //simplest example
     @GetMapping("/hello-world")
     public ResponseEntity<StreamingResponseBody> excel() {
-        Workbook workBook = new XSSFWorkbook();
-        Sheet sheet = workBook.createSheet("My Sheet");
-        sheet.setColumnWidth(0, 2560);
-        sheet.setColumnWidth(1, 2560);
-        Row row = sheet.createRow(0);
-        row.createCell(0).setCellValue("Hello World");
 
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=\"myfilename.xlsx\"")
-                .body(workBook::write);
+                .body(excelService.generateHelloWorldExcel()::write);
     }
-
-
-
-
 }
