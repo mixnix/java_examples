@@ -1,5 +1,6 @@
 package com.example.generateexcel;
 
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -8,8 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
-
-import java.io.ByteArrayOutputStream;
 
 @RestController
 @RequestMapping("/api/excels")
@@ -22,12 +21,13 @@ public class ExcelController {
     //simplest example
     @GetMapping("/hello-world")
     public ResponseEntity<StreamingResponseBody> helloWorldExcel() {
+        Workbook workbook = excelService.generateHelloWorldExcel();
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 //attachment
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=myfilename.xlsx")
-                .body(excelService.generateHelloWorldExcel()::write);
+                .body(workbook::write);
     }
 
     //creates sorted excel
@@ -40,13 +40,4 @@ public class ExcelController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=myfilename.xlsx")
                 .body(excelService.generateFilteredExcel()::write);
     }
-
-//    @GetMapping("/hello-world-byte-array")
-//    public ResponseEntity<ByteArrayOutputStream> helloWorldExcelButWithByteArray() {
-//        return ResponseEntity
-//                .ok()
-//                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-//                .header(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=myfilename.xlsx")
-//                .body(excelService.generateHelloWorldExcel()::write);
-//    }
 }
