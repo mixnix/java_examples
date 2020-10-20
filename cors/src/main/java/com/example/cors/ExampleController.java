@@ -1,5 +1,6 @@
 package com.example.cors;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,7 +12,7 @@ import java.util.List;
 @RequestMapping("/api/cars")
 public class ExampleController {
 
-    //simplest example
+    @CrossOrigin
     @GetMapping
     public List<String> getAllCars() {
         return Arrays.asList("car1", "car2", "car3");
