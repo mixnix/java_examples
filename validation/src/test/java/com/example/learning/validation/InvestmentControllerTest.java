@@ -11,9 +11,13 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.math.BigDecimal;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @ActiveProfiles("LOCAL") //z tym profilem uruchomi mi się test ("LOCAL")
@@ -37,5 +41,23 @@ public class InvestmentControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(200))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
+
+    @Test
+    public void shouldStatusBe201AndProperContentWhenSendingProperData() throws Exception {
+        Investment investment = new Investment();
+        investment.setEmail("email@gmail.com");
+        investment.setInitialCapital(new BigDecimal(1000));
+        investment.setDuration(20L);
+        investment.setReturnRate(new BigDecimal(3));
+        mockMvc.perform(post("/api/investments")
+                .content(objectMapper.writeValueAsString(investment))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(201))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.email").value("email@gmail.com"))
+                .andExpect(jsonPath("$.initialCapital").value(1000))
+                .andExpect(jsonPath("$.duration").value(20))
+                .andExpect(jsonPath("$.returnRate").value(3));
     }
 }
