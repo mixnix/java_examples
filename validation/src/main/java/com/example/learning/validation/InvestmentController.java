@@ -43,6 +43,7 @@ public class InvestmentController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     //todo: byla jeszcze jedna adnotacja pozwalająca wyłuskać obiekt z żądania, co to była za adnotacja?
     public Investment createInvestment(@RequestBody @Valid Investment investment) {
         return investmentRepository.save(investment);
